@@ -14,14 +14,16 @@ class Player
 {
 private:
     sf::RectangleShape shape;
-
+    float movementSpeed;
     void initVariables();
     void initShape();
 
 public:
-    Player();
+    Player(float x=0.1f, float y=0.1f);
     virtual ~Player();
-    void update();
+
+    void updateInput();
+    void update(sf::RenderTarget* target);
     void render(sf::RenderTarget* target);
 };
 
