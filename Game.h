@@ -1,4 +1,5 @@
-// pragma once
+#ifndef GAME_H
+#define GAME_H
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
@@ -7,7 +8,7 @@
 #include <ctime>
 #include <sstream>
 #include <vector>
-
+#include "Player.h"
 
 class Game
 {
@@ -15,6 +16,10 @@ private:
 sf::VideoMode videoMode;
 sf::RenderWindow* window;
 bool endGame;
+sf::Event sfmlEvent;
+
+Player player;
+
 
 void initWindow();
 void initVariables();
@@ -30,7 +35,10 @@ public:
 
 
     //Functions
+    const bool running() const;
+    void pollEvents();
     void update();
     void render();
 };
 
+#endif
