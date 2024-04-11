@@ -13,19 +13,21 @@
 class SwagBall
 {
 private:
-    /* data */
+    sf::CircleShape shape;
+
+    void initShape();
+    
 public:
     SwagBall(/* args */);
     ~SwagBall();
+
+//Functions
+void update();
+void render(sf::RenderTarget& target);
+
 };
 
-SwagBall::SwagBall(/* args */)
-{
-}
 
-SwagBall::~SwagBall()
-{
-}
 
 
 #endif
