@@ -5,6 +5,7 @@ void Player::initVariables() {
   this->movementSpeed = 5.f; 
   this->hpMax = 10;
   this->hp = hpMax;
+  this->points = 0;
   };
 void Player::initShape() {
   this->shape.setFillColor(sf::Color::Green);
@@ -18,6 +19,12 @@ Player::Player(float x, float y) {
 }
 
 Player::~Player() {}
+
+const sf::RectangleShape& Player::getShape() const
+{
+  return this->shape;
+};
+
 
 void Player::updateInput() {
   // Keyboard input
