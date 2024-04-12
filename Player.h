@@ -17,7 +17,6 @@ private:
     float movementSpeed;
     int hpMax;
     int hp;
-    int points;
     void initVariables();
     void initShape();
 
