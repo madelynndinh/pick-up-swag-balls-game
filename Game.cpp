@@ -1,8 +1,14 @@
 #include "Game.h"
 #include "Player.h"
+#include "SwagBall.h"
 #include <iostream>
 
-void Game::initVariables() { this->endGame = false; }
+void Game::initVariables() { 
+  this->endGame = false;
+  this->spawnTimerMax = 10.f;
+  this->spawnTimer = this->spawnTimerMax;
+  this->maxSwagBall = 10; 
+  }
 
 void Game::initWindow() {
   this->videoMode = sf::VideoMode(800, 600);
@@ -41,10 +47,35 @@ void Game::pollEvents() {
   }
 }
 
+void Game::spawnSwagBalls(){
+  //Timer
+  if(this->spawnTimer < this->spawnTimerMax)
+  {
+    this->spawnTimer += 1.f;
+  }
+  else
+  {
+    if (this->swagBalls.size()<this->maxSwagBall)
+    {
+      this->swagBalls.push_back(SwagBall(*this->window));
+      this->spawnTimer = 0.f;
+
+    }
+
+    
+  }
+  
+};
+
+ void Game::updateCollision() //Check collision between players and the balls
+ {
+
+ };
+
 void Game::update() 
 { 
   this->pollEvents(); 
-
+  this->spawnSwagBalls();
   this->player.update(this->window);
   };
 
@@ -53,6 +84,11 @@ void Game::render() {
 
   // Render stuff
   this->player.render(this->window);
+
+for (auto i: this->swagBalls)
+{
+  i.render(*this->window);
+}
 
   this->window->display();
 };

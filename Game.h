@@ -9,6 +9,8 @@
 #include <sstream>
 #include <vector>
 #include "Player.h"
+#include "SwagBall.h"
+
 
 class Game
 {
@@ -20,6 +22,10 @@ sf::Event sfmlEvent;
 
 Player player;
 
+std::vector <SwagBall> swagBalls;
+float spawnTimerMax;
+float spawnTimer;
+int maxSwagBall;
 
 void initWindow();
 void initVariables();
@@ -37,6 +43,8 @@ public:
     //Functions
     const bool running() const;
     void pollEvents();
+    void spawnSwagBalls();
+    void updateCollision();
     void update();
     void render();
 };
