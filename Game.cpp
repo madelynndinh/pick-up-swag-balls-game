@@ -79,7 +79,7 @@ void Game::spawnSwagBalls(){
   {
     if (this->swagBalls.size()<this->maxSwagBall)
     {
-      this->swagBalls.push_back(SwagBall(*this->window));
+      this->swagBalls.push_back(SwagBall(*this->window,rand()%SwagBallTypes::NROFTYPES)); //randomize the type
       this->spawnTimer = 0.f;
 
     }
@@ -90,14 +90,33 @@ void Game::spawnSwagBalls(){
 };
 
  void Game::updateCollision() 
+
  //Check collision between players and the balls
  {
   for (size_t i = 0; i < this->swagBalls.size(); i++)
   {
     if (this->player.getShape().getGlobalBounds().intersects(this->swagBalls[i].getShape().getGlobalBounds()))
 {
+  switch (this->swagBalls[i].getType())
+  {
+  case SwagBallTypes::DEFAULT:
+    this->points++;
+    break;
+  
+  case SwagBallTypes::DAMAGING:
+    this->player.takeDamage(1);
+    break;\
+    case SwagBallTypes::HEALING:
+    this->player.gainHealth(1);
+    break;
+
+  }
+  //Add points
+    this-> points+=1;
+
+    //Remove the ball
   this->swagBalls.erase(this->swagBalls.begin()+i);
-  this-> points+=1;
+
 
 }
   }
@@ -110,7 +129,8 @@ void Game::updateGui()
 {
   std::stringstream ss;
 
-ss << "-Points: " << this-> points;
+ss << "- Points: " << this-> points<< "\n"
+<< " - Health: " <<this->player.getHp()<<"/"<<this->player.getHpMax()<<"\n";
 
   this->guiText.setString(ss.str());
 };
