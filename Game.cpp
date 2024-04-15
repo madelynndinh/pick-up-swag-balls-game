@@ -21,7 +21,7 @@ void Game::initWindow() {
 
 void Game::initFont()
 {
-if(this->font.loadFromFile("Bungee_Spice/BungeeSpice-Regular.ttf"))
+if(this->font.loadFromFile("/Users/minhtamdinh/Documents/OOP/project/demo/pick-up-swag-balls-game/Bungee_Spice/BungeeSpice-Regular.ttf"))
 {
   std::cout << "ERROR::GAME::INITFONTS::"<<std::endl;
 };
@@ -36,6 +36,13 @@ this->guiText.setFont(this->font);
 this->guiText.setFillColor(sf::Color::White);
 this->guiText.setCharacterSize(32);
 
+
+//End game text
+this->endGameText.setFont(this->font);
+this->endGameText.setFillColor(sf::Color::Red);
+this->endGameText.setCharacterSize(60);
+this->endGameText.setPosition(sf::Vector2f(20,300));
+this->endGameText.setString("YOU ARE DEAD!");
 };
 
 // Constructors and Destructors2
@@ -48,10 +55,18 @@ Game::Game() {
 
 Game::~Game() { delete window; };
 
+//Accessors
+const bool& Game::getEndGame() const
+{
+return false;
+};
 
 
 // Functions
-const bool Game::running() const { return this->window->isOpen(); };
+const bool Game::running() const { 
+   return this->window->isOpen();
+    //&&this->endGame ==false; 
+  };
 void Game::pollEvents() {
   // Event polling
   while (this->window->pollEvent(this->sfmlEvent)) {
@@ -79,7 +94,7 @@ void Game::spawnSwagBalls(){
   {
     if (this->swagBalls.size()<this->maxSwagBall)
     {
-      this->swagBalls.push_back(SwagBall(*this->window,rand()%SwagBallTypes::NROFTYPES)); //randomize the type
+      this->swagBalls.push_back(SwagBall(*this->window,this->randBallType())); //randomize the type
       this->spawnTimer = 0.f;
 
     }
@@ -87,12 +102,38 @@ void Game::spawnSwagBalls(){
     
   }
   
+}
+    const int Game::randBallType() const
+ { 
+  int type = SwagBallTypes::DEFAULT;
+  int randValue = rand() %100 +1;
+if(randValue > 60 && randValue <=80)
+{
+  type = SwagBallTypes::DAMAGING;
+}
+
+else if (randValue>80 && randValue <=100)
+{
+  type = SwagBallTypes::HEALING;
+}
+
+  return type;
+   };
+
+void Game::updatePlayer()
+{
+  this->player.update(this->window);
+  if (this->player.getHp()<= 0 )
+  {
+    this->endGame=true;
+  }
+  
+
 };
+void Game::updateCollision()
 
- void Game::updateCollision() 
-
- //Check collision between players and the balls
- {
+// Check collision between players and the balls
+{
   for (size_t i = 0; i < this->swagBalls.size(); i++)
   {
     if (this->player.getShape().getGlobalBounds().intersects(this->swagBalls[i].getShape().getGlobalBounds()))
@@ -104,8 +145,8 @@ void Game::spawnSwagBalls(){
     break;
   
   case SwagBallTypes::DAMAGING:
-    this->player.takeDamage(1);
-    break;\
+    this->player.takeDamage(10);
+    break;
     case SwagBallTypes::HEALING:
     this->player.gainHealth(1);
     break;
@@ -139,10 +180,17 @@ ss << "- Points: " << this-> points<< "\n"
 void Game::update() 
 { 
   this->pollEvents(); 
+
+  if (this->endGame == false)
+  {
   this->spawnSwagBalls();
-  this->player.update(this->window);
+  this->updatePlayer();
   this->updateCollision();
   this->updateGui();
+
+  }
+  
+  
 
   };
 
@@ -163,6 +211,12 @@ for (auto i: this->swagBalls)
 }
 //RENDER GUI
 this->renderGui(this->window);
+
+//Render end text
+if (this->endGame == true)
+{
+  this->window->draw(this->endGameText);
+}
 
   this->window->display();
 };
